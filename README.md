@@ -32,3 +32,33 @@ NAT Gateway
 Configured in the correct Subnet (Public AZ-A), utilizing the private-app-rt to sucessfully communicate between ec2 and nat
 - Original route table rulings keeps traffic local (10.0.0.0/16)
 - New route table rule routes all other traffic to the NAT (0.0.0.0)
+
+## Security Group 
+### 1. Application Load Balancer Security Group (ALB-SG)
+**Purpose:** Accept incoming web traffic from users.
+
+**Inbound Rules**
+| Protocol | Port | Source |
+|----------|------|--------|
+| HTTP | 80 | 0.0.0.0/0 |
+
+---
+
+
+### 2. EC2 Security Group (EC2-SG)
+**Purpose:** Allow only the Application Load Balancer to communicate with the application servers.
+
+**Inbound Rules**
+| Protocol | Port | Source |
+|----------|------|--------|
+| HTTP | 80 | ALB-SG |
+
+---
+
+### 3. RDS Security Group (RDS-SG)
+**Purpose:** Allow only the application servers to connect to the database.
+
+**Inbound Rules**
+| Protocol | Port | Source |
+|----------|------|--------|
+| MySQL/Aurora | 3306 | EC2-SG |
