@@ -62,3 +62,35 @@ Configured in the correct Subnet (Public AZ-A), utilizing the private-app-rt to 
 | Protocol | Port | Source |
 |----------|------|--------|
 | MySQL/Aurora | 3306 | EC2-SG |
+
+
+## IAM Role
+
+### EC2 IAM Role ("three-tier-ec2-role")
+
+**Purpose:** Grants EC2 instances temporary AWS credentials without storing keys on the instance
+
+**Policy Attached**
+- AmazonSSManagedInstanceCore
+
+**Benefits**
+- Enables secure management through AWS Systems Manager Sessions Manager
+- Eliminates the need to store AWS access keys on EC2 instances
+- Follows AWS Security best practices by using temporary credentials
+
+---
+
+## Launch Template
+
+### Launch Template (`three-tier-launch-template`)
+
+**Purpose:** Serves as a reusable blueprint for EC2 instances launched by the Auto Scaling Group.
+
+**Configuration**
+- Amazon Linux 2023
+- Instance Type: `t2.micro` (or `t3.micro`)
+- Security Group: `EC2-SG`
+- IAM Role: `three-tier-ec2-role`
+- Root Volume: `8 GiB gp3`
+- Public IP: Disabled
+- Subnet: Configured by the Auto Scaling Group
