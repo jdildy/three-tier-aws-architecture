@@ -94,3 +94,59 @@ Configured in the correct Subnet (Public AZ-A), utilizing the private-app-rt to 
 - Root Volume: `8 GiB gp3`
 - Public IP: Disabled
 - Subnet: Configured by the Auto Scaling Group
+
+
+## Auto Scaling Group (ASG)
+
+### Purpose
+The Auto Scaling Group (ASG) manages the lifecycle and availability of EC2 instances in the application tier. It ensures the desired number of instances are running and automatically replaces unhealthy instances.
+
+### Configuration
+
+**Launch Template**
+- `three-tier-launch-template`
+
+**Subnets**
+- Private-App-A (Availability Zone A)
+- Private-App-B (Availability Zone B)
+
+**Capacity**
+- Minimum: 2 instances
+- Desired: 2 instances
+- Maximum: 2 instances
+
+### Architecture
+
+The ASG distributes EC2 instances across multiple Availability Zones to improve availability.
+
+```
+Availability Zone A          Availability Zone B
+
+Private-App-A                Private-App-B
+      |                            |
+      v                            v
+   EC2 Instance              EC2 Instance
+```
+
+### Responsibilities
+
+The ASG is responsible for:
+
+- Launching EC2 instances using the Launch Template.
+- Maintaining the desired number of running instances.
+- Replacing failed or unhealthy instances.
+- Supporting horizontal scaling when scaling policies are configured.
+
+### Design Decisions
+
+**Why use an ASG instead of manually creating EC2 instances?**
+
+Auto Scaling Groups provide self-healing capabilities. If an instance fails, the ASG automatically launches a replacement instance, reducing manual intervention and improving application availability.
+
+**Why deploy across multiple Availability Zones?**
+
+Deploying instances across multiple Availability Zones prevents a single AZ failure from taking down the application tier.
+
+**Why are instances deployed in private subnets?**
+
+The application tier should not be directly accessible from the internet. Traffic should flow through the Application Load Balancer, which provides centralized traffic management and reduces the attack surface.
