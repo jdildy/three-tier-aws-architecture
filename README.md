@@ -33,6 +33,10 @@ Configured in the correct Subnet (Public AZ-A), utilizing the private-app-rt to 
 - Original route table rulings keeps traffic local (10.0.0.0/16)
 - New route table rule routes all other traffic to the NAT (0.0.0.0)
 
+**NOTE** 
+NAT Gateway was initially configured to demonstrate private subnet outbound internet access. 
+It was removed after validation to avoid unnecessary costs. In production, NAT Gateways 
+would typically remain deployed for private workloads requiring outbound access.
 ## Security Group 
 ### 1. Application Load Balancer Security Group (ALB-SG)
 **Purpose:** Accept incoming web traffic from users.
